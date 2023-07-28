@@ -19,7 +19,8 @@ typedef struct {
     void *const      *interfaces;
 } POLY_TYPE(table);
 
-#define POLY_DERIVED(base, derived, ctor, impls)                                              \
+#define POLY_DECLARE_DERIVED(base, derived, ctor) extern base ctor(derived *ptr);
+#define POLY_DEFINE_DERIVED(base, derived, ctor, impls)                                       \
     base ctor(derived *ptr)                                                                   \
     {                                                                                         \
         static void *interfaces[POLY_TYPE(base)] = {0};                                       \
@@ -38,7 +39,9 @@ typedef struct {
     void                   *POLY_VAR(self); \
     POLY_TYPE(table) const *POLY_VAR(table);
 
-#define poly_func(base, name) ((POLY_TYPE(name))base->POLY_VAR(table)->interfaces[POLY_INTERFACE(name)])
+#define POLY_FUNC(base, name) ((POLY_TYPE(name))(base)->POLY_VAR(table)->interfaces[POLY_INTERFACE(name)])
 
-#define poly_cast(base, derived) \
+#define poly_cast(base, derived) ((derived *)(base)->POLY_VAR(self))
+
+#define poly_safe_cast(base, derived) \
     (strcmp((base)->POLY_VAR(table)->type, #derived) == 0 ? (derived *)(base)->POLY_VAR(self) : 0)
