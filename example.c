@@ -44,7 +44,8 @@ void vk_init(Context *ctx)
 
 void vk_print(Context *ctx, int param)
 {
-    printf("vk print: x: %d param: %d\n", ctx->x, param);
+    assert(poly_cast(ctx, glContext) == NULL);
+    printf("vk print: x: %d param: %d\n", poly_cast(ctx, vkContext)->o, param);
 }
 
 void vk_illegal(void)
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
         print(ctx);
     }
     {
-        vkContext vk = {.o = 1};
+        vkContext vk = {.o = 789};
         *ctx         = vk_ctor(&vk);
         printf("%d\n", poly_cast(ctx, vkContext)->o);
         assert(poly_cast(ctx, vkContext));
