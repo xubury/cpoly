@@ -7,3 +7,4 @@ typedef struct {
 } vkContext;
 
 POLY_DECLARE_DERIVED(Context, vkContext, vk_ctor)
+

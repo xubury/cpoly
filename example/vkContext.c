@@ -20,5 +20,5 @@ int vk_type(void)
     return TYPE_VK;
 }
 
-POLY_DEFINE_DERIVED(Context, vkContext, vk_ctor,
-                    POLY_IMPL(print, vk_print) POLY_IMPL(init, vk_init) POLY_IMPL(get_type, vk_type))
+POLY_DEFINE_DERIVED(Context, vkContext, vk_ctor, POLY_IMPL(init, vk_init), POLY_IMPL(print, vk_print),
+                    POLY_IMPL(get_type, vk_type))
