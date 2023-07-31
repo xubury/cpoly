@@ -3,6 +3,7 @@
 #include <vkContext.h>
 #include <stdio.h>
 #include <assert.h>
+#include <malloc.h>
 
 // calling interface
 void init(Context *ctx)
@@ -28,18 +29,22 @@ int main(void)
     /*  vk init */
     /*  vk print: x: 789 param: 123 */
     {
-        glContext gl  = {.o = 0.123};
-        Context   ctx = gl_ctor(&gl);
+        glContext *gl = malloc(sizeof(glContext));
+        gl->o         = 0.123;
+        Context ctx   = gl_ctor(gl, free);
         printf("%f\n", poly_cast(&ctx, glContext)->o);
+
         assert(POLY_FUNC(&ctx, get_type)() == TYPE_GL);
         assert(poly_safe_cast(&ctx, glContext));
         assert(poly_safe_cast(&ctx, vkContext) == NULL);
         init(&ctx);
         print(&ctx);
+
+        poly_free(&ctx);
     }
     {
         glContext gl  = {.o = 0.456};
-        Context   ctx = gl_ctor(&gl);
+        Context   ctx = gl_ctor(&gl, NULL);
         assert(POLY_FUNC(&ctx, get_type)() == TYPE_GL);
         printf("%f\n", poly_cast(&ctx, glContext)->o);
         init(&ctx);
@@ -47,7 +52,7 @@ int main(void)
     }
     {
         vkContext vk  = {.o = 789};
-        Context   ctx = vk_ctor(&vk);
+        Context   ctx = vk_ctor(&vk, NULL);
         assert(POLY_FUNC(&ctx, get_type)() == TYPE_VK);
         printf("%d\n", poly_cast(&ctx, vkContext)->o);
         assert(poly_safe_cast(&ctx, vkContext));
